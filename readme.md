@@ -10,6 +10,7 @@ Welcome to **Git Commands Guide**! This repository provides a clean and structur
 - [Branching & Merging](#branching--merging)
 - [Working with Remote Repositories](#working-with-remote-repositories)
 - [Advanced Git Commands](#advanced-git-commands)
+- [Data Science Git Workflow](#data-science-git-workflow)
 - [License](#license)
 
 ---
@@ -89,45 +90,124 @@ To set an upstream tracking branch and push changes, use:
 ```sh
 git push -u origin <branch_name>
 ```
-This command links your local branch with the remote one, so future `git push` commands don’t need to specify the branch name.
+This command establishes a connection between your local branch and the remote one, so future `git push` commands automatically push to the correct branch without needing to specify it.
 
 ### 🔽 Pulling Changes
-Pulling retrieves changes from the remote repository and merges them into your local branch:
+Pulling retrieves and merges the latest changes from the remote repository into your local branch:
 ```sh
 git pull origin <branch_name>
 ```
-If conflicts occur, Git will prompt you to resolve them before finalizing the pull.
+Use `git pull` to ensure your local repository is in sync with the latest remote changes, preventing merge conflicts.
 
 ### 🔄 Fetching Changes
-Fetching downloads the latest commits from the remote repository without merging them into your local branch:
+Fetching downloads the latest commits from the remote repository **without merging** them into your local branch:
 ```sh
 git fetch origin
 ```
-Use `git fetch` when you want to inspect the latest changes before integrating them into your codebase.
+Use `git fetch` when you want to review updates before integrating them, ensuring controlled version updates.
 
 ---
 
 ## ⚡ Advanced Git Commands
 
 ### 🔙 Reverting & Resetting
-Revert changes:
+Revert changes (creates a new commit that undoes the specified commit):
 ```sh
 git revert <commit_hash>
 ```
-Reset to a previous commit:
+Reset to a previous commit (modifies history, use with caution):
 ```sh
 git reset --hard <commit_hash>
 ```
+`git revert` is safer for shared repositories, while `git reset` is best for local modifications.
 
 ### 📌 Stashing Changes
-Stash current changes:
+Temporarily save changes without committing:
 ```sh
 git stash
 ```
-Apply stashed changes:
+Apply the most recent stash:
 ```sh
 git stash pop
 ```
+Use `git stash` when you need to switch branches without losing progress.
+
+---
+
+## 📂 Data Science Git Workflow
+This repository includes a **`data_science_project/`** folder where Git commands are applied in a real-world data science scenario. The project follows a structured workflow:
+
+### 📌 Project Structure
+```
+data_science_project/
+│-- data/
+│   ├── raw_data.csv
+│   ├── cleaned_data.csv
+│-- notebooks/
+│   ├── data_preprocessing.ipynb
+│   ├── model_training.ipynb
+│-- scripts/
+│   ├── preprocess.py
+│   ├── train_model.py
+│-- results/
+│   ├── model_metrics.txt
+│-- README.md
+```
+
+### 🔄 Workflow Example
+1. **Clone the repository:**
+   ```sh
+   git clone <repo_url>
+   ```
+2. **Create a feature branch for preprocessing:**
+   ```sh
+   git branch feature/data-preprocessing
+   git switch feature/data-preprocessing
+   ```
+3. **Modify the `preprocess.py` script and commit changes:**
+   ```sh
+   git add scripts/preprocess.py
+   git commit -m "Added data cleaning functions"
+   ```
+4. **Push changes to remote:**
+   ```sh
+   git push -u origin feature/data-preprocessing
+   ```
+5. **Merge changes into `main`:**
+   ```sh
+   git switch main
+   git merge feature/data-preprocessing
+   ```
+6. **Fetch latest changes without merging:** If other team members have made changes to the main branch, you can fetch the latest changes to inspect them before merging:
+   ```sh
+   git fetch origin
+   ```
+7. **Pull and update local repository:** To update your local repository with any changes made by other team members on the remote, use git pull:
+   ```sh
+   git pull origin main
+   ```
+8. **Temporarily save uncommitted changes before switching branches:** If you are in the middle of working on something but need to switch branches, you can stash your uncommitted changes and apply them later:
+   ```sh
+   git stash
+   ```
+9. **Retrieve stashed changes (Apply the stashed changes):** If you previously stashed changes and now want to retrieve them, you can apply the stashed changes:
+   ```sh
+   git stash pop
+   ```
+   This command retrieves the most recent stash and removes it from the stash list.
+   If you want to keep the stash while applying it, use git stash apply instead of git stash pop.
+   Apply stashed changes without removing them from the stash list
+   ```sh
+   git stash apply stash@{1}
+   ```
+9. **Revert a commit if needed:** If a commit caused issues in the project and you need to revert it, you can use the git revert command to undo the changes introduced by that commit:
+   ```sh
+   git revert <commit_hash>
+   ```
+10. **Reset to a previous state if required (dangerous for shared repos):** If you need to completely discard changes and return to a specific commit, you can use git reset. This is risky when working on shared repositories, so use it carefully:
+  ```sh
+   git reset --hard <commit_hash>
+   ```
 
 ---
 
